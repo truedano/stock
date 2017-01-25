@@ -82,31 +82,24 @@ class yahooGetDiv(object):
 			sumadd += self.div[i][1]
 		return (sumadd/year)
 
-"""
-info = yahooGetInfo('2820')
-div = yahooGetDiv('2820')
-perdiv = div.cashAverage(5)
-print("2820 ==={} {} {}=== , {}".format(perdiv*16,perdiv*20,perdiv*32,info.final_price))
+def main():
+	with open('stocklist.txt') as f:
+	    content = f.readlines()
+	content = [x.strip() for x in content]
 
-info = yahooGetInfo('2412')
-div = yahooGetDiv('2412')
-perdiv = div.cashAverage(5)
-print("2412 ==={} {} {}=== , {}".format(perdiv*16,perdiv*20,perdiv*32,info.final_price))
-"""
-with open('stocklist.txt') as f:
-    content = f.readlines()
-content = [x.strip() for x in content]
+	while True:
+		print("=================================================")
+		for c in content:
+			info = yahooGetInfo(c)
+			div = yahooGetDiv(c)
+			perdiv = div.cashAverage(5)
+			if info.final_price <= perdiv*16:
+				print(colored("{} : ==={} {} {}=== , {}".format(c,perdiv*16,perdiv*20,perdiv*32,info.final_price),'cyan'))
+			elif info.final_price >= perdiv*20:
+				print(colored("{} : ==={} {} {}=== , {}".format(c,perdiv*16,perdiv*20,perdiv*32,info.final_price),'red'))
+			else:
+				print("{} : ==={} {} {}=== , {}".format(c,perdiv*16,perdiv*20,perdiv*32,info.final_price))
+		time.sleep(5)
 
-while True:
-	print("=================================================")
-	for c in content:
-		info = yahooGetInfo(c)
-		div = yahooGetDiv(c)
-		perdiv = div.cashAverage(5)
-		if info.final_price <= perdiv*16:
-			print(colored("{} : ==={} {} {}=== , {}".format(c,perdiv*16,perdiv*20,perdiv*32,info.final_price),'cyan'))
-		elif info.final_price >= perdiv*20:
-			print(colored("{} : ==={} {} {}=== , {}".format(c,perdiv*16,perdiv*20,perdiv*32,info.final_price),'red'))
-		else:
-			print("{} : ==={} {} {}=== , {}".format(c,perdiv*16,perdiv*20,perdiv*32,info.final_price))
-	time.sleep(5)
+if __name__ == '__main__':
+	main()
