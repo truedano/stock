@@ -6,6 +6,7 @@ app.controller('myCtrl', function($scope, $http, $timeout) {
         $scope.stocklist = response.data.stocklist;
         for(var i=0;i<$scope.stocklist.length;i++){
             handlePrice($scope.stocklist[i]);
+            handleDiv($scope.stocklist[i]);
         }
     });
 
@@ -20,6 +21,14 @@ app.controller('myCtrl', function($scope, $http, $timeout) {
 
             $scope.$apply() 
         }, 5000);
+    }
+
+    $scope.perdiv = {};
+    function handleDiv(num){
+        $http.get("perdiv", {params:{stockNum:num.toString()}})
+        .then(function(response) {
+            $scope.perdiv[num] = response.data.perdiv;
+        });
     }
     
 });

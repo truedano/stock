@@ -22,8 +22,8 @@ def price():
 	info = yahooGetInfo(stockNum)
 	return jsonify(final_price=info.final_price)
 
-@app.route('/div', methods=['GET'])
-def div():
+@app.route('/perdiv', methods=['GET'])
+def perdiv():
 	stockNum = request.args.get('stockNum')
 	d = yahooGetDiv(stockNum)
 	perdiv = d.cashAverage(5)
