@@ -15,7 +15,7 @@ app.controller('myCtrl', function($scope, $http, $timeout) {
             $http.get("price", {params:{stockNum:num.toString()}})
             .then(function(response) {
                 $scope.final_price[num] = response.data.final_price;
-                console.log('get :',$scope.final_price[num])
+                //console.log('get :',$scope.final_price[num])
             });
 
             $scope.$apply() 
