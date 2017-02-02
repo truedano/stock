@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import time
 from time import strftime, gmtime
@@ -40,14 +40,17 @@ class yahooGetInfo(object):
 			#print(row.get_text())
 			pass
 		self.time = str(rows[0].get_text())
-		self.final_price = float(rows[1].get_text())
-		self.buy_price = float(rows[2].get_text())
-		self.sell_price = float(rows[3].get_text())
-		self.number = int(str(rows[5].get_text()).replace(",", ""))
-		self.yesterday_price = float(rows[6].get_text())
-		self.open_price = float(rows[7].get_text())
-		self.high_price = float(rows[8].get_text())
-		self.low_price = float(rows[9].get_text())
+		self.final_price = float(str(rows[1].get_text()))
+		try:
+			self.buy_price = float(str(rows[2].get_text()))
+		except ValueError:
+			pass
+		#self.sell_price = float(rows[3].get_text())
+		#self.number = int(str(rows[5].get_text()).replace(",", ""))
+		#self.yesterday_price = float(rows[6].get_text())
+		#self.open_price = float(rows[7].get_text())
+		#self.high_price = float(rows[8].get_text())
+		#self.low_price = float(rows[9].get_text())
 		#print("時間 收盤")
 		#print("-----------------")
 		#print("{} {}".format(self.time,self.final_price))

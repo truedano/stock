@@ -13,11 +13,8 @@
 <body ng-controller="myCtrl">
 	<ul>
 		<li ng-repeat="x in stocklist">
-			{% raw %}{{ x }}{% endraw %}
+			{% raw %}{{ x }}  {{final_price[x]}} {% endraw %}
 		</li>
 	</ul>
-	<div>
-	{% raw %}{{ final_price }}{% endraw %}
-	</div>
 </body>
 </html>

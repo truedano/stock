@@ -4,16 +4,22 @@ app.controller('myCtrl', function($scope, $http, $timeout) {
     $http.get("stocklist")
     .then(function(response) {
         $scope.stocklist = response.data.stocklist;
+        for(var i=0;i<$scope.stocklist.length;i++){
+            handlePrice($scope.stocklist[i]);
+        }
     });
 
-    //update info and div per 5 sec
-    setInterval(function() {
-    	$http.get("price", {params:{stockNum:'2330'}})
-    	.then(function(response) {
-        	$scope.final_price = response.data.final_price;
-    	});
+    $scope.final_price = {};
+    function handlePrice(num){
+        setInterval(function() {
+            $http.get("price", {params:{stockNum:num.toString()}})
+            .then(function(response) {
+                $scope.final_price[num] = response.data.final_price;
+                console.log('get :',$scope.final_price[num])
+            });
 
-        $scope.$apply() 
-    }, 5000);
+            $scope.$apply() 
+        }, 5000);
+    }
     
 });

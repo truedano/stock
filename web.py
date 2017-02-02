@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import time
 from time import strftime, gmtime
@@ -8,7 +8,6 @@ import requests
 from termcolor import colored
 from yahoo import yahooGetDiv, yahooGetInfo
 from flask import Flask, request, render_template, jsonify, Response
-import thread
 import json
 
 app = Flask(__name__)
