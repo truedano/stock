@@ -1,6 +1,15 @@
 
 var app = angular.module('myApp', []);
-app.controller('myCtrl', function($scope, $http, $timeout) {
+
+app.controller('topController', function($scope, $http, $timeout) {
+    $scope.type = 'stocklist';
+
+    $scope.changeType = function(type){
+        $scope.type = type;
+    };
+});
+
+app.controller('stocklistController', function($scope, $http, $timeout) {
     $http.get("stocklist")
     .then(function(response) {
         $scope.stocklist = response.data.stocklist;
@@ -30,5 +39,9 @@ app.controller('myCtrl', function($scope, $http, $timeout) {
             $scope.perdiv[num] = response.data.perdiv;
         });
     }
+    
+});
+
+app.controller('settingController', function($scope, $http, $timeout) {
     
 });

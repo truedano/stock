@@ -19,17 +19,47 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='main_page.css') }}">
 </head>
 </script>
-<body ng-controller="myCtrl">
-	<table class="container table-hover">
-		<tr class="bg-primary">
-			<td>股票代號</td><td>股價</td><td>平均股利</td><td>股利*16</td><td>股利*20</td><td>股利*32</td>
-		</tr>
-		<tr ng-repeat="x in stocklist">
-			{% raw %}<td>{{ x }}</td><td>{{ final_price[x] }}</td><td>{{ perdiv[x] }}</td><td>{{ perdiv[x]*16 }}</td><td>{{ perdiv[x]*20 }}</td><td>{{ perdiv[x]*32 }}</td>{% endraw %}
-		</tr>
-	</table>
+<body>
+
+<div class="container-fluid">
+	<div class="row content" ng-controller='topController'>
+		<div class="col-sm-3 sidenav">
+			<h4>truedano stock</h4>
+			<ul class="nav nav-pills nav-stacked">
+				<li ng-class="{active: type=='stocklist'}">
+					<a href="javascript:;" ng-click="changeType('stocklist')">清單</a>
+				</li>
+				<li ng-class="{active: type=='setting'}">
+					<a href="javascript:;" ng-click="changeType('setting')">設定</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class="col-sm-9" ng-switch='type'>
+
+			<!--stocklist-->
+			<div ng-switch-when='stocklist' ng-controller='stocklistController'>
+				<table class="container table-hover">
+					<tr class="bg-primary">
+						<td>股票代號</td><td>股價</td><td>平均股利</td><td>股利*16</td><td>股利*20</td><td>股利*32</td>
+					</tr>
+					<tr ng-repeat="x in stocklist">
+						{% raw %}<td>{{ x }}</td><td>{{ final_price[x] }}</td><td>{{ perdiv[x] }}</td><td>{{ perdiv[x]*16 }}</td><td>{{ perdiv[x]*20 }}</td><td>{{ perdiv[x]*32 }}</td>{% endraw %}
+					</tr>
+				</table>
+			</div>
+
+			<!--setting-->
+			<div ng-switch-when='setting' ng-controller='settingController'>
+				setting
+			</div>
+		</div>
+	</div>
+</div>
 
 </body>
 </html>
