@@ -43,63 +43,12 @@
 
 			<!--stocklist-->
 			<div ng-switch-when='stocklist' ng-controller='stocklistController'>
-				<table class="container table-hover">
-					<tr class="bg-primary">
-						<td>股票代號</td><td>股價</td><td>平均股利</td><td>股利*16</td><td>股利*20</td><td>股利*32</td>
-					</tr>
-					<tr ng-repeat="x in stocklist">
-						{% raw %}<td>{{ x }}</td><td>{{ final_price[x] }}</td><td>{{ perdiv[x] | number:2 }}</td><td>{{ perdiv[x]*16 | number:2 }}</td><td>{{ perdiv[x]*20 | number:2 }}</td><td>{{ perdiv[x]*32 | number:2 }}</td>{% endraw %}
-					</tr>
-				</table>
+				{% include "_stocklist.html" %}
 			</div>
 
 			<!--setting-->
 			<div ng-switch-when='setting' ng-controller='settingController'>
-				<h4>setting</h4>
-				<select id='stocklist_select' ng-click='pre_del_stock_num()'>
-					<option ng-repeat="x in config.stocklist">
-						{% raw %}{{x}}{% endraw %}
-					</option>
-				</select>
-				<button data-toggle="modal" data-target="#addstock">新增</button>
-				<button data-toggle="modal" data-target="#delstock">刪除</button>
-
-				<br><br><br>
-				<button class="btn-default" ng-click="savestock()">儲存</button>
-
-				<div class="modal fade" id="addstock" role="dialog">
-					<div class="modal-dialog modal-sm">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal">&times;</button>
-								<h4 class="modal-title">新增</h4>
-							</div>
-							<div class="modal-body">
-								<input type="text" ng-model="add_one_stock">
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='add_stock_num()'>確定</button>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="modal fade" id="delstock" role="dialog">
-					<div class="modal-dialog modal-sm">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal">&times;</button>
-								<h4 class="modal-title">刪除</h4>
-							</div>
-							<div class="modal-body">
-								<input type="text" ng-model="del_one_stock">
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='del_stock_num()'>確定</button>
-							</div>
-						</div>
-					</div>
-				</div>
+				{% include "_setting.html" %}
 			</div>
 
 

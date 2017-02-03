@@ -1,0 +1,45 @@
+<h4>setting</h4>
+<select id='stocklist_select' ng-click='pre_del_stock_num()'>
+	<option ng-repeat="x in config.stocklist">
+		{% raw %}{{x}}{% endraw %}
+	</option>
+</select>
+<button data-toggle="modal" data-target="#addstock">新增</button>
+<button data-toggle="modal" data-target="#delstock">刪除</button>
+
+<br><br><br>
+<button class="btn-default" ng-click="savestock()">儲存</button>
+
+<div class="modal fade" id="addstock" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">新增</h4>
+			</div>
+			<div class="modal-body">
+				<input type="text" ng-model="add_one_stock">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='add_stock_num()'>確定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="delstock" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">刪除</h4>
+			</div>
+			<div class="modal-body">
+				<input type="text" ng-model="del_one_stock">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='del_stock_num()'>確定</button>
+			</div>
+		</div>
+	</div>
+</div>

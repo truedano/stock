@@ -1,0 +1,8 @@
+<table class="container table-hover">
+	<tr class="bg-primary">
+		<td>股票代號</td><td>股價</td><td>平均股利</td><td>股利*16</td><td>股利*20</td><td>股利*32</td>
+	</tr>
+	<tr ng-repeat="x in stocklist">
+		{% raw %}<td>{{ x }}</td><td>{{ final_price[x] }}</td><td>{{ perdiv[x] | number:2 }}</td><td>{{ perdiv[x]*16 | number:2 }}</td><td>{{ perdiv[x]*20 | number:2 }}</td><td>{{ perdiv[x]*32 | number:2 }}</td>{% endraw %}
+	</tr>
+</table>
