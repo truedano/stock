@@ -10,7 +10,7 @@ app.controller('topController', function($scope, $http, $timeout) {
 });
 
 app.controller('stocklistController', function($scope, $http, $timeout) {
-    $http.get("stocklist")
+    $http.get("setting")
     .then(function(response) {
         $scope.stocklist = response.data.stocklist;
         for(var i=0;i<$scope.stocklist.length;i++){
@@ -43,5 +43,20 @@ app.controller('stocklistController', function($scope, $http, $timeout) {
 });
 
 app.controller('settingController', function($scope, $http, $timeout) {
-    
+    $http.get("setting")
+    .then(function(response) {
+        $scope.config = response.data;
+    });
+
+    $scope.add_stock_num = function(){
+        $scope.config.stocklist.push($scope.add_one_stock);
+        $scope.add_one_stock = '';
+    };
+
+    $scope.savestock = function(){
+        //var indata = {username:'truedano'};
+        $http.post("setting", $scope.config).
+        then(function (data, status, headers, config) { alert("success") },
+             function (data, status, headers, config) { alert("error") });
+    };
 });

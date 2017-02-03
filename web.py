@@ -29,12 +29,17 @@ def perdiv():
 	perdiv = d.cashAverage(5)
 	return jsonify(perdiv=perdiv)
 
-@app.route('/stocklist', methods=['GET'])
-def stocklist():
-	with open('stocklist.txt') as f:
-	    content = f.readlines()
-	content = [x.strip() for x in content]
-	return jsonify(stocklist = content)
+@app.route('/setting', methods=['GET','POST'])
+def setting():
+	if request.method == 'GET':
+		with open('config.json') as data_file:    
+			data = json.load(data_file)
+		return jsonify(data)
+	else:
+		with open('config.json','w',encoding = 'UTF-8') as file:
+			file.write(request.data.decode("utf-8"))
+		file.close()
+		return render_template('main_page.html')
 
 def main():
 	app.run('0.0.0.0')

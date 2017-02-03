@@ -55,7 +55,36 @@
 
 			<!--setting-->
 			<div ng-switch-when='setting' ng-controller='settingController'>
-				setting
+				<form>
+					<h4>setting</h4>
+					<select>
+						<option ng-repeat="x in config.stocklist">
+							{% raw %}{{x}}{% endraw %}
+						</option>
+					</select>
+					<button data-toggle="modal" data-target="#addstock">新增</button>
+
+					<br><br><br>
+					<button class="btn-default" ng-click="savestock()">儲存</button>
+
+					<div class="modal fade" id="addstock" role="dialog">
+						<div class="modal-dialog modal-sm">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">新增</h4>
+								</div>
+								<div class="modal-body">
+									<input type="text" ng-model="add_one_stock">
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='add_stock_num()'>確定</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+
 			</div>
 		</div>
 	</div>
