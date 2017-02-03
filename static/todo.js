@@ -59,4 +59,16 @@ app.controller('settingController', function($scope, $http, $timeout) {
         then(function (data, status, headers, config) { alert("success") },
              function (data, status, headers, config) { alert("error") });
     };
+
+    $scope.pre_del_stock_num = function(){
+        $scope.del_one_stock = $('#stocklist_select').val();
+    };
+
+    $scope.del_stock_num = function(){
+        Array.prototype.deleteOf = function(a) {  
+            for(var i=this.length; i-- && this[i] !== a;);  
+                if (i >= 0) this.splice(i,1); 
+        };
+        $scope.config.stocklist.deleteOf($scope.del_one_stock);
+    };
 });
