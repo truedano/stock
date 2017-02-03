@@ -6,22 +6,29 @@ app.controller('topController', function($scope, $http, $timeout) {
 
     $scope.changeType = function(type){
         $scope.type = type;
+        if( $scope.type != "stocklist" ){
+            for(var i=0;i<intervalArray.length;i++){
+               clearInterval(intervalArray[i]);
+            }
+        }
     };
 });
 
+var intervalArray = [];
+var intervaltmp;
 app.controller('stocklistController', function($scope, $http, $timeout) {
     $http.get("setting")
     .then(function(response) {
         $scope.stocklist = response.data.stocklist;
         for(var i=0;i<$scope.stocklist.length;i++){
-            handlePrice($scope.stocklist[i]);
+            intervalArray[i] = handlePrice($scope.stocklist[i]);
             handleDiv($scope.stocklist[i]);
         }
     });
 
     $scope.final_price = {};
     function handlePrice(num){
-        setInterval(function() {
+        intervaltmp = setInterval(function() {
             $http.get("price", {params:{stockNum:num.toString()}})
             .then(function(response) {
                 $scope.final_price[num] = response.data.final_price;
@@ -30,6 +37,7 @@ app.controller('stocklistController', function($scope, $http, $timeout) {
 
             $scope.$apply() 
         }, 5000);
+        return intervaltmp;
     }
 
     $scope.perdiv = {};
