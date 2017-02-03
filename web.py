@@ -36,11 +36,6 @@ def stocklist():
 	content = [x.strip() for x in content]
 	return jsonify(stocklist = content)
 
-@app.route('/redirect', methods=['GET'])
-def redirect():
-	page = request.args.get('page')
-	return render_template(page+'.html')
-
 def main():
 	app.run('0.0.0.0')
 
