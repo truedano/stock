@@ -76,6 +76,7 @@ app.controller('settingController', function($scope, $http, $timeout) {
     $http.get("setting")
     .then(function(response) {
         $scope.config = response.data;
+        $scope.del_one_stock = $scope.config.stocklist[0];
     });
 
     $scope.add_stock_num = function(){
