@@ -1,4 +1,14 @@
 
+function check_open_time(){
+    var d = new Date();
+    var hours = d.getHours();
+    var min = d.getMinutes();
+    if( (hours >= 9 && hours <= 13) || (hours == 13 && min <= 30) )
+        return true;
+    else
+        return false;
+}
+
 var app = angular.module('myApp', []);
 
 app.controller('topController', function($scope, $http, $timeout) {
@@ -7,8 +17,10 @@ app.controller('topController', function($scope, $http, $timeout) {
     $scope.changeType = function(type){
         $scope.type = type;
         if( $scope.type != "stocklist" ){
-            for(var i=0;i<intervalArray.length;i++){
-               clearInterval(intervalArray[i]);
+            if( check_open_time() ){
+                for(var i=0;i<intervalArray.length;i++){
+                   clearInterval(intervalArray[i]);
+                }
             }
         }
     };
@@ -16,6 +28,7 @@ app.controller('topController', function($scope, $http, $timeout) {
 
 var intervalArray = [];
 var intervaltmp;
+var wait_msec = 5000;
 app.controller('stocklistController', function($scope, $http, $timeout) {
     $http.get("setting")
     .then(function(response) {
@@ -28,15 +41,23 @@ app.controller('stocklistController', function($scope, $http, $timeout) {
 
     $scope.final_price = {};
     function handlePrice(num){
-        intervaltmp = setInterval(function() {
+        var intervaltmp;
+        if( check_open_time() ){
+            intervaltmp = setInterval(function() {
+                $http.get("price", {params:{stockNum:num.toString()}})
+                .then(function(response) {
+                    $scope.final_price[num] = response.data.final_price;
+                });
+
+                $scope.$apply() 
+            }, wait_msec);
+        }else{
             $http.get("price", {params:{stockNum:num.toString()}})
             .then(function(response) {
                 $scope.final_price[num] = response.data.final_price;
-                //console.log('get :',$scope.final_price[num])
             });
-
-            $scope.$apply() 
-        }, 5000);
+        }
+        
         return intervaltmp;
     }
 
