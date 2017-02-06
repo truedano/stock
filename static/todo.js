@@ -37,6 +37,7 @@ app.controller('stocklistController', function($scope, $http, $timeout) {
             intervalArray[i] = handlePrice($scope.stocklist[i]);
             handleDiv($scope.stocklist[i]);
         }
+        wait_msec = parseInt(response.data.wait_sec) * 1000;
     });
 
     $scope.final_price = {};
