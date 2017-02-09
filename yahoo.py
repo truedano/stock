@@ -6,6 +6,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 import requests
 from termcolor import colored
+from yahoo_finance import Share
 
 class yahooGetInfo(object):
 	def __init__(self,stock_number='1101'):
@@ -85,24 +86,133 @@ class yahooGetDiv(object):
 			sumadd += self.div[i][1]
 		return (sumadd/year)
 
-def main():
-	with open('stocklist.txt') as f:
-	    content = f.readlines()
-	content = [x.strip() for x in content]
+#===========================================================================================================
+class yahooHistory(object):
+	def __init__(self,stock_number=1101,start_day='2000-01-01'):
+		self.stock_number = stock_number
+		self.start_day = start_day
+		self.fee = 0.0007125 #手續費
+		self.tax = 0.003 #稅金
+	
+	def getStockNumber(self):
+		return self.stock_number
+	def getStartDay(self):
+		return self.start_day
+	def getHistoryData(self):
+		stock = Share(str(self.stock_number)+'.TW')
+		today = time.strftime("%Y-%m-%d")
+		self.data = stock.get_historical(self.start_day, str(today))
+		self.totalDays = len(self.data)
+		return self.data
+	def getAverage(self,averageDay):
+		days = len(self.data) #期間總天數
+		self.averageRet = []
+		for i in range(0,days-averageDay,1):
+			sum = 0
+			for k in range(0,averageDay):
+				sum += float(self.data[i+k]['Close'])
+			tmpdict = {'Data': self.data[i]['Date'],'Close':float(self.data[i]['Close']),'AvgClose': sum/averageDay,'Diff':float(self.data[i]['Close'])-sum/averageDay}
+			self.averageRet.append(tmpdict)
+		return self.averageRet
 
-	while True:
-		print("=================================================")
-		for c in content:
-			info = yahooGetInfo(c)
-			div = yahooGetDiv(c)
-			perdiv = div.cashAverage(5)
-			if info.final_price <= perdiv*16:
-				print(colored("{} : ==={} {} {}=== , {}".format(c,perdiv*16,perdiv*20,perdiv*32,info.final_price),'cyan'))
-			elif info.final_price >= perdiv*20:
-				print(colored("{} : ==={} {} {}=== , {}".format(c,perdiv*16,perdiv*20,perdiv*32,info.final_price),'red'))
-			else:
-				print("{} : ==={} {} {}=== , {}".format(c,perdiv*16,perdiv*20,perdiv*32,info.final_price))
-		time.sleep(5)
+def getProfitAvgBuyAndSell(history,stock_number,start_day,avg_num,momey):
+	#history = yahooHistory(stock_number,start_day)
+	#history.getHistoryData()
+	avg = history.getAverage(avg_num)
+	avg.reverse()
+	buyCnt = 0
+	sellCnt = 0
+	profit = 0
+	for x in range(1,len(avg),1):
+		yesterdayDiff = avg[x-1]['Diff']
+		nowDiff = avg[x]['Diff']
+		nowClose = avg[x]['Close']
+		if yesterdayDiff <= 0 and nowDiff > 0 :
+			#print(x,avg[x]['Data'],nowClose,"買進")
+			buyCnt += 1
+			profit -= (nowClose * 1000 * (1+history.fee))
+		elif yesterdayDiff >= 0 and nowDiff < 0 :
+			#print(x,avg[x]['Data'],nowClose,"賣出")
+			sellCnt += 1
+			profit += nowClose * 1000
+			profit -= nowClose * 1000 * history.tax
+
+	print("=============================================================================")
+	print("股票代號 : ",history.stock_number,",均線 : ",avg_num)
+	print("買進次數 : ",buyCnt,", 賣出次數 : ",sellCnt)
+	print("損益 : ",profit,",總天數 : ",history.totalDays)
+	print("年化報酬率 : ",profit/momey*history.totalDays/365,"%")
+
+def getProfitAvgBuyOnly(history,stock_number,start_day,avg_num):
+	#history = yahooHistory(stock_number,start_day)
+	#history.getHistoryData()
+	avg = history.getAverage(avg_num)
+	avg.reverse()
+	buyCnt = 0
+	sellCnt = 0
+	profit = 0
+	cost = 0
+	nowValue = 0
+	for x in range(1,len(avg),1):
+		yesterdayDiff = avg[x-1]['Diff']
+		nowDiff = avg[x]['Diff']
+		nowClose = avg[x]['Close']
+		if yesterdayDiff <= 0 and nowDiff > 0 :
+			#print(x,avg[x]['Data'],nowClose,"買進")
+			buyCnt += 1
+			cost += (nowClose * 1000 * (1+history.fee))
+	nowValue = float(history.data[0]['Close'])*buyCnt*1000
+	profit = nowValue - cost
+	perYearBuyCnt = buyCnt/(history.totalDays/365)
+	print("=============================================================================")
+	print("股票代號 : ",history.stock_number,",均線 : ",avg_num)
+	print("買進次數 : ",buyCnt,", 賣出次數 : ",sellCnt)
+	print("市值 : ",nowValue)
+	print("總成本 : ",cost,",總天數 : ",history.totalDays,",每年買進次數 : ",perYearBuyCnt)
+	print("浮動損益 : ",profit,",浮動年化報酬率 : ",profit/cost*history.totalDays/365,"%")
+
+def getProfitAvgDeviateBuyOnly(history,stock_number,start_day,avg_num,deviate):
+	#history = yahooHistory(stock_number,start_day)
+	#history.getHistoryData()
+	avg = history.getAverage(avg_num)
+	avg.reverse()
+	buyCnt = 0
+	sellCnt = 0
+	profit = 0
+	cost = 0
+	nowValue = 0
+	for x in range(1,len(avg),1):
+		nowClose = avg[x]['Close']
+		avgClose = avg[x]['AvgClose']
+		if ( (avgClose - nowClose)/avgClose ) >= (deviate/100) :
+			buyCnt += 1
+			cost += (nowClose * 1000 * (1+history.fee))
+	nowValue = float(history.data[0]['Close'])*buyCnt*1000
+	profit = nowValue - cost
+	perYearBuyCnt = buyCnt/(history.totalDays/365)
+	if perYearBuyCnt < 20 :
+		print("=============================================================================")
+		print("股票代號 : ",history.stock_number,",均線 : ",avg_num,",乖離率 : ",deviate,"%")
+		print("買進次數 : ",buyCnt,", 賣出次數 : ",sellCnt)
+		print("市值 : ",nowValue)
+		print("總成本 : ",cost,",總天數 : ",history.totalDays,",每年買進次數 : ",perYearBuyCnt)
+		print("浮動損益 : ",profit,",浮動年化報酬率 : ",profit/cost*history.totalDays/365,"%")
+
+def getProfitInit(stock_number,start_day):
+	history = yahooHistory(stock_number,start_day)
+	history.getHistoryData()
+	return history
+
+def main():
+	#history = getProfitInit(2412,'2003-01-01')
+	#for x in range(20,100,1):
+	#	for y in range(4,8,1):
+	#		getProfitAvgDeviateBuyOnly(history,2412,'2003-01-01',x,y)
+
+	#history = getProfitInit('2330','2000-01-01')
+	#for x in range(20,121,1):
+	#	getProfitAvgBuyOnly(history,'2330','2000-01-01',x)
+	pass
 
 if __name__ == '__main__':
 	main()
