@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 import time
 from time import strftime, gmtime
-from datetime import datetime
+from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 import requests
 from termcolor import colored
-from yahoo import yahooGetDiv, yahooGetInfo
+from yahoo import yahooGetDiv, yahooGetInfo, yahooHistory
 from flask import Flask, request, render_template, jsonify, Response
 import json
 

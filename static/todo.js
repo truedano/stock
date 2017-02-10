@@ -72,6 +72,40 @@ app.controller('stocklistController', function($scope, $http, $timeout) {
     
 });
 
+app.controller('addTargetController', function($scope, $http, $timeout) {
+    $scope.final_price = {};
+
+    $http.get("setting")
+    .then(function(response) {
+        $scope.config = response.data;
+        for(var i=0;i<$scope.config.add_target.length;i++){
+            intervalArray[i] = handlePrice($scope.config.add_target[i].stock_number);
+        }
+    });
+
+    function handlePrice(num){
+        var intervaltmp;
+        if( check_open_time() ){
+            intervaltmp = setInterval(function() {
+                $http.get("price", {params:{stockNum:num.toString()}})
+                .then(function(response) {
+                    $scope.final_price[num] = response.data.final_price;
+                });
+
+                $scope.$apply() 
+            }, wait_msec);
+        }else{
+            $http.get("price", {params:{stockNum:num.toString()}})
+            .then(function(response) {
+                $scope.final_price[num] = response.data.final_price;
+            });
+        }
+        
+        return intervaltmp;
+    }
+
+});
+
 app.controller('settingController', function($scope, $http, $timeout) {
     $http.get("setting")
     .then(function(response) {
@@ -101,5 +135,22 @@ app.controller('settingController', function($scope, $http, $timeout) {
                 if (i >= 0) this.splice(i,1); 
         };
         $scope.config.stocklist.deleteOf($scope.del_one_stock);
+    };
+
+    $scope.add_target_type = 'avg'
+    $scope.add_target_btn = function(){
+        var tmpdict = {};
+        tmpdict = 
+        {
+            'stock_number': $scope.add_target_stock_number,
+            'type': $scope.add_target_type,
+            'avg_number': $scope.add_target_avg_number,
+            'avg_delicate': $scope.add_target_avg_delicate
+        };
+        $scope.config.add_target.push(tmpdict);
+    };
+    $scope.add_target_del = function(index){
+        //console.log("index=",index);
+        $scope.config.add_target.splice(index, 1);
     };
 });

@@ -38,6 +38,11 @@
 				{% include "_stocklist.html" %}
 			</div>
 
+			<!--add_target-->
+			<div ng-switch-when='add_target' ng-controller='addTargetController'>
+				{% include "_add_target.html" %}
+			</div>
+
 			<!--setting-->
 			<div ng-switch-when='setting' ng-controller='settingController'>
 				{% include "_setting.html" %}

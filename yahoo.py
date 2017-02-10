@@ -204,10 +204,10 @@ def getProfitInit(stock_number,start_day):
 	return history
 
 def main():
-	#history = getProfitInit(2412,'2003-01-01')
-	#for x in range(20,100,1):
-	#	for y in range(4,8,1):
-	#		getProfitAvgDeviateBuyOnly(history,2412,'2003-01-01',x,y)
+	history = getProfitInit('0050','2008-01-01')
+	for x in range(20,100,1):
+		for y in range(4,8,1):
+			getProfitAvgDeviateBuyOnly(history,'0050','2008-01-01',x,y)
 
 	#history = getProfitInit('2330','2000-01-01')
 	#for x in range(20,121,1):

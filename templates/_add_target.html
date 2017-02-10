@@ -1,0 +1,15 @@
+<h4>觀察列表</h4>
+<table class="table">
+	<tr>
+		<td>股票代號</td><td>類型</td><td>均線數</td><td>均線乖離</td><td>股價</td>
+	</tr>
+	<tr ng-repeat="x in config.add_target">
+		{% raw %}
+		<td>{{x.stock_number}}</td>
+		<td>{{x.type}}</td>
+		<td>{{x.avg_number}}</td>
+		<td>{{x.avg_delicate}}</td>
+		<td>{{final_price[x.stock_number]}}</td>
+		{% endraw %}
+	</tr>
+</table>

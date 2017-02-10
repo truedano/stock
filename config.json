@@ -1,1 +1,1 @@
-{"stocklist":["2412","2820","2904","5604","2608","8422","9917"],"wait_sec":"10"}
+{"add_target":[{"stock_number":"2412","type":"avg_delicate","avg_number":"21","avg_delicate":"5"},{"stock_number":"2330","type":"avg","avg_number":"73","avg_delicate":""}],"stocklist":["2412","2820","2904","5604","2608","8422","9917"],"wait_sec":"10"}

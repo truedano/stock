@@ -10,6 +10,34 @@
 <br><br>
 等待時間 : <input type="text" ng-model="config.wait_sec"> 秒
 
+<hr>
+
+觀察列表 :
+<br>
+股票代號<input type="text" ng-model="add_target_stock_number" size="8">
+類型
+<select id='add_target_type' ng-model='add_target_type'>
+	<option value='avg'>均線</option>
+	<option value='avg_delicate'>均線乖離</option>
+</select>
+均線數<input type="text" ng-model="add_target_avg_number" size="8">
+乖離率<input type="text" ng-model="add_target_avg_delicate" size="8">%
+<button ng-click='add_target_btn()'>新增</button>
+<table class="table">
+	<tr>
+		<td>股票代號</td><td>類型</td><td>均線數</td><td>均線乖離</td><td></td>
+	</tr>
+	<tr ng-repeat="x in config.add_target">
+		{% raw %}
+		<td>{{x.stock_number}}</td>
+		<td>{{x.type}}</td>
+		<td>{{x.avg_number}}</td>
+		<td>{{x.avg_delicate}}</td>
+		<td> <button ng-click='add_target_del($index)'>刪除</button> </td>
+		{% endraw %}
+	</tr>
+</table>
+
 <br><br><br>
 <button class="btn-default" ng-click="savestock()">儲存</button>
 
