@@ -1,4 +1,9 @@
 
+var intervalArrayStocklist = [];
+var intervalArrayAddTargetPrice = [];
+var intervalArrayAddTargetAvg = [];
+var wait_msec = 5000;
+
 function check_open_time(){
     var d = new Date();
     var hours = d.getHours();
@@ -33,12 +38,9 @@ app.controller('topController', function($scope, $http, $timeout) {
     };
 });
 
-var intervalArrayStocklist = [];
-var intervalArrayAddTargetPrice = [];
-var intervalArrayAddTargetAvg = [];
-var intervaltmp;
-var wait_msec = 5000;
 app.controller('stocklistController', function($scope, $http, $timeout) {
+    $scope.final_price = {};
+
     $http.get("setting")
     .then(function(response) {
         $scope.stocklist = response.data.stocklist;
@@ -49,7 +51,6 @@ app.controller('stocklistController', function($scope, $http, $timeout) {
         wait_msec = parseInt(response.data.wait_sec) * 1000;
     });
 
-    $scope.final_price = {};
     function handlePrice(num){
         var intervaltmp;
         if( check_open_time() ){
