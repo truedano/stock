@@ -18,15 +18,24 @@ app.controller('topController', function($scope, $http, $timeout) {
         $scope.type = type;
         if( $scope.type != "stocklist" ){
             if( check_open_time() ){
-                for(var i=0;i<intervalArray.length;i++){
-                   clearInterval(intervalArray[i]);
+                for(var i=0;i<intervalArrayStocklist.length;i++){
+                   clearInterval(intervalArrayStocklist[i]);
+                }
+            }
+        }else if( $scope.type != "add_target" ){
+            if( check_open_time() ){
+                for(var i=0;i<intervalArrayAddTargetPrice.length;i++){
+                   clearInterval(intervalArrayAddTargetPrice[i]);
+                   clearInterval(intervalArrayAddTargetAvg[i]);
                 }
             }
         }
     };
 });
 
-var intervalArray = [];
+var intervalArrayStocklist = [];
+var intervalArrayAddTargetPrice = [];
+var intervalArrayAddTargetAvg = [];
 var intervaltmp;
 var wait_msec = 5000;
 app.controller('stocklistController', function($scope, $http, $timeout) {
@@ -34,7 +43,7 @@ app.controller('stocklistController', function($scope, $http, $timeout) {
     .then(function(response) {
         $scope.stocklist = response.data.stocklist;
         for(var i=0;i<$scope.stocklist.length;i++){
-            intervalArray[i] = handlePrice($scope.stocklist[i]);
+            intervalArrayStocklist[i] = handlePrice($scope.stocklist[i]);
             handleDiv($scope.stocklist[i]);
         }
         wait_msec = parseInt(response.data.wait_sec) * 1000;
@@ -74,12 +83,14 @@ app.controller('stocklistController', function($scope, $http, $timeout) {
 
 app.controller('addTargetController', function($scope, $http, $timeout) {
     $scope.final_price = {};
+    $scope.avg = {};
 
     $http.get("setting")
     .then(function(response) {
         $scope.config = response.data;
         for(var i=0;i<$scope.config.add_target.length;i++){
-            intervalArray[i] = handlePrice($scope.config.add_target[i].stock_number);
+            intervalArrayAddTargetPrice[i] = handlePrice($scope.config.add_target[i].stock_number);
+            intervalArrayAddTargetAvg[i] = handleAvg($scope.config.add_target[i].stock_number,$scope.config.add_target[i].avg_number);
         }
     });
 
@@ -102,6 +113,25 @@ app.controller('addTargetController', function($scope, $http, $timeout) {
         }
         
         return intervaltmp;
+    }
+
+    function handleAvg(num,day) {
+        var intervaltmp;
+        if( check_open_time() ){
+            intervaltmp = setInterval(function() {
+                $http.get("avg", {params:{stockNum:num.toString(),days:day.toString()}})
+                .then(function(response) {
+                    $scope.avg[num.toString()] = response.data.avg;
+                });
+
+                $scope.$apply() 
+            }, wait_msec);
+        }else{
+            $http.get("avg", {params:{stockNum:num.toString(),days:day.toString()}})
+            .then(function(response) {
+                $scope.avg[num.toString()] = response.data.avg;
+            });
+        }
     }
 
 });

@@ -114,6 +114,19 @@ class yahooHistory(object):
 			tmpdict = {'Data': self.data[i]['Date'],'Close':float(self.data[i]['Close']),'AvgClose': sum/averageDay,'Diff':float(self.data[i]['Close'])-sum/averageDay}
 			self.averageRet.append(tmpdict)
 		return self.averageRet
+	def getAverageClose(self,days):
+		ret = self.getAverage(days);
+		sum = 0
+		for x in range(0,days-1,1):
+			sum += ret[x]['AvgClose']
+		#sum += getNowClose(self.stock_number)
+		sum += yahooGetInfo(stock_number=self.stock_number).final_price
+		return sum/days
+
+def getNowClose(stock_number):
+	stock = Share(str(stock_number)+'.tw')
+	stock.refresh()
+	return float(stock.get_price())
 
 def getProfitAvgBuyAndSell(history,stock_number,start_day,avg_num,momey):
 	#history = yahooHistory(stock_number,start_day)

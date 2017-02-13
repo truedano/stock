@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 import time
 from time import strftime, gmtime
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from bs4 import BeautifulSoup
 import requests
 from termcolor import colored
-from yahoo import yahooGetDiv, yahooGetInfo, yahooHistory
+from yahoo import yahooGetDiv, yahooGetInfo, yahooHistory, getNowClose, getProfitInit
 from flask import Flask, request, render_template, jsonify, Response
 import json
 
@@ -19,8 +19,16 @@ def main_page():
 @app.route('/price', methods=['GET'])
 def price():
 	stockNum = request.args.get('stockNum')
-	info = yahooGetInfo(stockNum)
-	return jsonify(final_price=info.final_price)
+	return jsonify(final_price=yahooGetInfo(stockNum).final_price)
+
+@app.route('/avg', methods=['GET'])
+def avg():
+	stockNum = request.args.get('stockNum')
+	days = request.args.get('days')
+	getday = date.today() - timedelta(30+int(days)*3)
+	history = getProfitInit(stockNum,str(getday))
+	ret = history.getAverageClose(int(days))
+	return jsonify(avg=ret)
 
 @app.route('/perdiv', methods=['GET'])
 def perdiv():
