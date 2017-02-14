@@ -8,8 +8,12 @@ function check_open_time(){
     var d = new Date();
     var hours = d.getHours();
     var min = d.getMinutes();
-    if( (hours >= 9 && hours <= 13) || (hours == 13 && min <= 30) )
-        return true;
+    if( (hours >= 9 && hours <= 13) ){
+        if( hours == 13 && min <= 30 )
+            return true;
+        else
+            return false;
+    }
     else
         return false;
 }
