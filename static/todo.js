@@ -37,7 +37,7 @@ function stopIntervalArray(intervalarray,interval){
 
 var app = angular.module('myApp', []);
 
-app.controller('topController', function($scope, $http, $interval) {
+app.controller('topController', function($scope, $http, $interval, $timeout) {
     $scope.type = 'stocklist';
 
     $scope.changeType = function(type){
@@ -48,6 +48,12 @@ app.controller('topController', function($scope, $http, $interval) {
             stopIntervalArray(intervalArrayAddTargetAvg,$interval);
         }
     };
+
+    var tick = function() {
+        $scope.clock = Date.now() // get the current time
+        $timeout(tick, 1000); // reset the timer
+    }
+    $timeout(tick, $scope.tickInterval);
 });
 
 app.controller('stocklistController', function($scope, $http, $interval) {

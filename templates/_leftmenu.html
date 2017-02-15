@@ -1,5 +1,6 @@
 
 <h4>truedano</h4>
+<p>{% raw %}{{ clock  | date:'yyyy-MM-dd HH:mm:ss'}}{% endraw %}</p>
 <ul class="nav nav-pills nav-stacked">
 	<li ng-class="{active: type=='stocklist'}">
 		<a href="javascript:;" ng-click="changeType('stocklist')">存股清單</a>
