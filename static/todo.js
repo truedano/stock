@@ -100,6 +100,8 @@ app.controller('stocklistController', function($scope, $http, $interval) {
 app.controller('addTargetController', function($scope, $http, $interval) {
     $scope.final_price = {};
     $scope.avg = {};
+    $scope.showAvg = [];
+    $scope.showAvgDelicate = [];
 
     $http.get("setting")
     .then(function(response) {
@@ -107,6 +109,11 @@ app.controller('addTargetController', function($scope, $http, $interval) {
         for(var i=0;i<$scope.config.add_target.length;i++){
             intervalArrayAddTargetPrice[i] = handlePrice($scope.config.add_target[i].stock_number,intervalArrayAddTargetPrice[i]);
             intervalArrayAddTargetAvg[i] = handleAvg($scope.config.add_target[i].stock_number,$scope.config.add_target[i].avg_number,intervalArrayAddTargetAvg[i]);
+        
+            if( $scope.config.add_target[i].type == 'avg' )
+                $scope.showAvg.push($scope.config.add_target[i]);
+            else if( $scope.config.add_target[i].type == 'avg_delicate' )
+                $scope.showAvgDelicate.push($scope.config.add_target[i]);
         }
     });
 
@@ -136,13 +143,13 @@ app.controller('addTargetController', function($scope, $http, $interval) {
             intervaltmp = $interval(function(){
                 $http.get("avg", {params:{stockNum:num.toString(),days:day.toString()}})
                 .then(function(response) {
-                    $scope.avg[num.toString()] = response.data.avg;
+                    $scope.avg[num] = response.data.avg;
                 });
             }, wait_msec);
         }else{
             $http.get("avg", {params:{stockNum:num.toString(),days:day.toString()}})
             .then(function(response) {
-                $scope.avg[num.toString()] = response.data.avg;
+                $scope.avg[num] = response.data.avg;
             });
         }
         return intervaltmp;

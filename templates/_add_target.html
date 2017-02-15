@@ -1,12 +1,30 @@
-<h4>觀察列表</h4>
+<h3>觀察列表</h3>
+<hr>
+
+<h4>均線</h4>
 <table class="table">
 	<tr>
-		<td>股票代號</td><td>類型</td><td>均線數</td><td>均線乖離</td><td>股價</td><td>均價</td><td>預估買點</td>
+		<td>股票代號</td><td>均線數</td><td>股價</td><td>均價</td>
 	</tr>
-	<tr ng-repeat="x in config.add_target">
+	<tr ng-repeat="x in showAvg">
 		{% raw %}
 		<td>{{x.stock_number}}</td>
-		<td>{{x.type}}</td>
+		<td>{{x.avg_number}}</td>
+		<td>{{final_price[x.stock_number]}}</td>
+		<td>{{avg[x.stock_number]|number:2}}</td>
+		{% endraw %}
+	</tr>
+</table>
+<hr>
+
+<h4>均線乖離</h4>
+<table class="table">
+	<tr>
+		<td>股票代號</td><td>均線數</td><td>均線乖離</td><td>股價</td><td>均價</td><td>預估買點</td>
+	</tr>
+	<tr ng-repeat="x in showAvgDelicate">
+		{% raw %}
+		<td>{{x.stock_number}}</td>
 		<td>{{x.avg_number}}</td>
 		<td>{{x.avg_delicate}}</td>
 		<td>{{final_price[x.stock_number]}}</td>
