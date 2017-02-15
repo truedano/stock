@@ -9,13 +9,20 @@ function check_open_time(){
     var hours = d.getHours();
     var min = d.getMinutes();
     if( (hours >= 9 && hours <= 13) ){
-        if( hours == 13 && min <= 30 )
+        if( hours != 13 ){
             return true;
-        else
-            return false;
+        }else{
+            if( min <= 30 ){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
     }
-    else
+    else{
         return false;
+    }
 }
 
 function stopIntervalArray(intervalarray,interval){
